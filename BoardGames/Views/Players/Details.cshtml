@@ -1,0 +1,82 @@
+﻿@model BoardGames.Models.Player
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Player</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dd>
+            <table class="table">
+                <tr>
+                    <th>Ulubione gry</th>
+
+                </tr>
+                @foreach (var item in Model.FavouriteGames)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+
+                    </tr>
+                }
+            </table>
+        </dd>
+
+        <dd>
+            <table class="table">
+                <tr>
+                    <th>Sesje</th>
+
+                </tr>
+                @foreach (var item in Model.ParticipatedEvents.Concat(Model.HostedEvents).Distinct().ToList())
+                {
+                    <tr>
+                        <td>
+                            @if (item.HostPlayerID == Model.ID)
+                            {<b>@Html.DisplayFor(modelItem => item.Name) (organizator)</b>}
+                            else
+                            {
+                            @Html.DisplayFor(modelItem => item.Name)}
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
