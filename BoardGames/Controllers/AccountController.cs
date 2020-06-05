@@ -158,7 +158,7 @@ namespace BoardGames.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
-                    Player player = new Player { Email = model.Email };
+                    Player player = new Player { Email = model.Email, FirstName= model.FirstName, LastName=model.LastName };
                     ServiceContext db = new ServiceContext();
                     db.Players.Add(player);
                     db.SaveChanges();

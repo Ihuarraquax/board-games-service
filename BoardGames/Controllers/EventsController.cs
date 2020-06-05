@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using BoardGames.DAL;
 using BoardGames.Models;
 
@@ -20,7 +22,8 @@ namespace BoardGames.Controllers
         {
             var events = db.Events.Include(a => a.HostPlayer);
             //var events = db.Events.Include("HostPlayer");
-
+            Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
+            ViewBag.Player = player;
             return View(events.ToList());
         }
 
@@ -36,9 +39,10 @@ namespace BoardGames.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.ParticipantPlayers = new SelectList(db.Players, "ID", "NameAndEmail");
             return View(@event);
         }
-
+        [Authorize]
         // GET: Events/Create
         public ActionResult Create()
         {
@@ -49,6 +53,7 @@ namespace BoardGames.Controllers
         // POST: Events/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Name,Description,HostPlayerID,Place,Date")] Event @event)
@@ -63,7 +68,7 @@ namespace BoardGames.Controllers
             ViewBag.HostPlayerID = new SelectList(db.Players, "ID", "Email", @event.HostPlayerID);
             return View(@event);
         }
-
+        [Authorize]
         // GET: Events/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -83,6 +88,7 @@ namespace BoardGames.Controllers
         // POST: Events/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Name,Description,HostPlayerID,Place,Date")] Event @event)
@@ -98,6 +104,7 @@ namespace BoardGames.Controllers
         }
 
         // GET: Events/Delete/5
+        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -115,11 +122,54 @@ namespace BoardGames.Controllers
         // POST: Events/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult DeleteConfirmed(int id)
         {
             Event @event = db.Events.Find(id);
             db.Events.Remove(@event);
             db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [Authorize]
+        public ActionResult Cancel(int id)
+        {
+            Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
+            db.Events.Find(id).ParticipantPlayers.Remove(player);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        [Authorize]
+        public ActionResult Join(int id)
+        {
+            Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
+            db.Events.Find(id).ParticipantPlayers.Add(player);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public ActionResult SendInvite()
+        {
+            string playerId = Request["ParticipantPlayers"];
+            string messageText = Request["message"];
+            Player player = db.Players.Find(int.Parse(playerId));
+            
+            var message = new System.Net.Mail.MailMessage(ConfigurationManager.AppSettings["sender"], player.Email)
+            {
+                Subject = "Zaproszenie do gry",
+                Body = messageText
+            };
+
+            var smtpClient = new System.Net.Mail.SmtpClient
+            {
+                Host = ConfigurationManager.AppSettings["smtpHost"],
+                Credentials = new System.Net.NetworkCredential(
+                    ConfigurationManager.AppSettings["sender"],
+                    ConfigurationManager.AppSettings["passwd"]),
+                EnableSsl = true
+            };
+
+            smtpClient.Send(message);
             return RedirectToAction("Index");
         }
 

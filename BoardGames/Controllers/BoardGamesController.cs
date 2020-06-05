@@ -12,6 +12,7 @@ using PagedList;
 
 namespace BoardGames.Controllers
 {
+    
     public class BoardGamesController : Controller
     {
         private ServiceContext db = new ServiceContext();
@@ -80,6 +81,7 @@ namespace BoardGames.Controllers
         }
 
         // GET: BoardGames/Create
+        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -90,6 +92,7 @@ namespace BoardGames.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create([Bind(Include = "ID,Name,MinPlayers,MaxPlayers,Description,Website")] BoardGame boardGame)
         {
             if (ModelState.IsValid)
@@ -103,6 +106,7 @@ namespace BoardGames.Controllers
         }
 
         // GET: BoardGames/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -122,6 +126,7 @@ namespace BoardGames.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit([Bind(Include = "ID,Name,MinPlayers,MaxPlayers,Description,Website")] BoardGame boardGame)
         {
             if (ModelState.IsValid)
@@ -134,6 +139,7 @@ namespace BoardGames.Controllers
         }
 
         // GET: BoardGames/Delete/5
+        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -149,6 +155,7 @@ namespace BoardGames.Controllers
         }
 
         // POST: BoardGames/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

@@ -11,6 +11,7 @@ using BoardGames.Models;
 
 namespace BoardGames.Controllers
 {
+    [Authorize]
     public class PlayersController : Controller
     {
         private ServiceContext db = new ServiceContext();
@@ -116,6 +117,13 @@ namespace BoardGames.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost, ActionName("UpdateAvatar")]
+        public ActionResult UpdateAvatar()
+        {
+
+
+            return RedirectToAction("Index", "Manage");
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

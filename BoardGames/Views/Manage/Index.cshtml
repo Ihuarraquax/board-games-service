@@ -23,10 +23,20 @@
             }
             ]
         </dd>
-        <dt>External Logins:</dt>
+        <dt>Avatar:</dt>
         <dd>
-            @Model.Logins.Count [
-            @Html.ActionLink("Manage", "ManageLogins") ]
+
+            [
+            @if (Model.Player.Avatar!=null)
+            {
+                <img src="~/Obrazki/@Model.Player.Avatar"/>
+                @Html.ActionLink("Zmień awatar", "SetAvatar")
+            }
+            else
+            {
+                @Html.ActionLink("Dodaj awatar", "SetAvatar")
+            }
+            ]
         </dd>
         @*
             Phone Numbers can used as a second factor of verification in a two-factor authentication system.

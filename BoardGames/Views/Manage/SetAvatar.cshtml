@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "SetAvatar";
+}
+
+<h2>SetAvatar</h2>
+
+@using (Html.BeginForm("SaveAvatar","Manage",FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+<div class="form-group">
+    Dodaj zdjęcie:
+    <div class="col-md-10">
+        <input type="file" name="plikZObrazkiem" />
+    </div>
+    <div class="col-md-offset-2 col-md-10">
+        <input type="submit" value="Prześlij" class="btn btn-default" />
+    </div>
+</div>
+
+}
+

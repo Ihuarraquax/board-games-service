@@ -4,54 +4,39 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Wydarzenia</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.HostPlayer.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Place)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Date)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.HostPlayer.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Place)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Date)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
+@foreach (var item in Model)
+{
+    <div class="card rounded-lg border border-info">
+        <div class="card-body">
+            <h5 class="card-title">
+                @item.Name
+            </h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                @item.Place
+                @item.Date
+            </h6>
+            <p class="card-text">
+                @item.Description
+            </p>
+            @if (Request.IsAuthenticated)
+            {
+                if (item.ParticipantPlayers.Contains(ViewBag.Player))
+                {
+                    <a href="events/cancel/@item.ID" class="card-link">Zrezygnuj</a>
+                } else { 
+                <a href="events/join/@item.ID" class="card-link">Dołącz</a>
+                }
+            }
+            <a href="events/details/@item.ID" class="card-link">Szczegóły</a>
+        </div>
+    </div>
 }
 
-</table>
+
+

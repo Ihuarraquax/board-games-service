@@ -10,7 +10,7 @@ using System.Web;
 
 namespace BoardGames.DAL
 {
-    public class ServiceInit : DropCreateDatabaseAlways<ServiceContext>
+    public class ServiceInit : DropCreateDatabaseIfModelChanges<ServiceContext>
     {
         protected override void Seed(ServiceContext context)
         {
@@ -144,13 +144,13 @@ namespace BoardGames.DAL
             var userManager = new UserManager<ApplicationUser>(
                 new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
-            roleManager.Create(new IdentityRole("User"));
+            roleManager.Create(new IdentityRole("Player"));
 
             var users = players.Select(p => new ApplicationUser { UserName = p.Email }).ToList();
 
             users.ForEach(u => { 
                 userManager.Create(u, "Complex.Password.123");
-                userManager.AddToRole(u.Id,"User");    
+                userManager.AddToRole(u.Id,"Player");    
             });
 
             DbSet<BoardGame> boardGames1 = context.BoardGames;

@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BoardGames.Models;
+using BoardGames.DAL;
+using System.IO;
 
 namespace BoardGames.Controllers
 {
@@ -15,6 +17,7 @@ namespace BoardGames.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ServiceContext db = new ServiceContext();
 
         public ManageController()
         {
@@ -70,7 +73,8 @@ namespace BoardGames.Controllers
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                Player = db.Players.Where(p => p.Email==User.Identity.Name).FirstOrDefault()
             };
             return View(model);
         }
@@ -320,6 +324,26 @@ namespace BoardGames.Controllers
             }
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
+        }
+
+        public ActionResult SetAvatar()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult SaveAvatar()
+        {
+            Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
+            HttpPostedFileBase file = Request.Files["plikZObrazkiem"];
+            if(file != null && file.ContentLength > 0)
+            {
+                player.Avatar = System.Guid.NewGuid().ToString()+Path.GetExtension(file.FileName);
+                file.SaveAs(HttpContext.Server.MapPath("~/Obrazki/") + player.Avatar);
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
