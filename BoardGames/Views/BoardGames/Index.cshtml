@@ -11,60 +11,35 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-@using (Html.BeginForm("Index", "BoardGame", FormMethod.Get))
+@using (Html.BeginForm("Index", "BoardGames", FormMethod.Get))
 {
     <p>
-        Szukaj: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string))
+        Szukaj: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
         <input type="submit" value="Search" />
     </p>
 }
-<table class="table">
-    <tr>
-        <th>
-            @Html.ActionLink("Nazwa", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter=ViewBag.CurrentFilter  })
-        </th>
-        <th>
-            @Html.ActionLink("Min graczy", "Index", new { sortOrder = ViewBag.PlayersSortParm, currentFilter=ViewBag.CurrentFilter  })
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model[0].MaxPlayers)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model[0].Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model[0].Website)
-        </th>
-        <th></th>
-    </tr>
 
+
+<div class="row row-cols-1 row-cols-md-3">
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MinPlayers)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaxPlayers)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Website)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-            </td>
-        </tr>
-    }
 
-</table>
+        <div class="col mb-4">
+            <div class="card shadow-lg p-2 bg-white rounded">
+                <img src="@item.ImageUrl" onError="~/Obrazki/boardgame-placeholder.jpg" class="img-fluid" style="object-fit: contain;" alt="@item.Name">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted text-right">@item.MinPlayers-@item.MaxPlayers graczy </h6>
+                    <p class="card-text">@item.Description</p>
+                    <a href="Boardgames/Details/@item.ID" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+
 <br />
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 

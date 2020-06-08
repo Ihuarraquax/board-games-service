@@ -31,6 +31,7 @@ namespace BoardGames.Models
         public virtual List<Event> ParticipatedEvents { get; set; }
 
         public String NameAndEmail { get { return ToString(); } }
+        public String Name { get { return FirstName+" "+ LastName; } }
         public override string ToString()
         {
             return $"{FirstName} {LastName} ({Email})";

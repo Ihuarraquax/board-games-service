@@ -10,7 +10,7 @@ using System.Web;
 
 namespace BoardGames.DAL
 {
-    public class ServiceInit : DropCreateDatabaseIfModelChanges<ServiceContext>
+    public class ServiceInit : DropCreateDatabaseAlways<ServiceContext>
     {
         protected override void Seed(ServiceContext context)
         {
@@ -31,70 +31,80 @@ namespace BoardGames.DAL
                     Description="Mechy i Europa",
                     MinPlayers=1,
                     MaxPlayers=5,
-                    Website="https://www.rebel.pl/product.php/1,303/103303/Scythe-edycja-polska.html"
+                    Website="https://www.rebel.pl/product.php/1,303/103303/Scythe-edycja-polska.html",
+                    ImageUrl="https://www.rebel.pl/repository/thumbnails/5/0/501d5ed7526903d1bfe5251236205906.651450.800x0.jpg"
                 },
                 new BoardGame {Name = "Avalon",
                     Categories = new List<Category>{categories[2]},
                     Description="Gra dedukcyjna w swiecie legend arturiańskich",
                     MinPlayers=5,
                     MaxPlayers=10,
-                    Website="https://www.rebel.pl/product.php/1,1203/26217/Avalon-Rycerze-Krola-Artura.html"
+                    Website="https://www.rebel.pl/product.php/1,1203/26217/Avalon-Rycerze-Krola-Artura.html",
+                    ImageUrl="https://www.rebel.pl/repository/thumbnails/a/v/avalonnn.392016.800x0.png"
                 },
                 new BoardGame {Name = "Neuroshima Hex",
                     Categories = new List<Category>{categories[0]},
                     Description="Bitewniak",
                     MinPlayers=2,
                     MaxPlayers=6,
-                    Website="https://www.rebel.pl/product.php/1,302/27758/Neuroshima-HEX-edycja-3.0.html"
+                    Website="https://www.rebel.pl/product.php/1,302/27758/Neuroshima-HEX-edycja-3.0.html",
+                    ImageUrl="https://www.rebel.pl/repository/thumbnails/n/s/nsh3plbox3d.438159.800x0.jpg"
                 },
                 new BoardGame {Name = "Splendor",
                     Categories = new List<Category>{categories[3]},
                     Description="Kolekcjonowanie nigdy nie było tak uzależniające!",
                     MinPlayers=2,
                     MaxPlayers=4,
-                    Website="https://www.rebel.pl/product.php/1,303/28615/Splendor.html"
+                    Website="https://www.rebel.pl/product.php/1,303/28615/Splendor.html",
+                    ImageUrl="https://www.rebel.pl/repository/thumbnails/s/p/splendor_new_3d.202732.800x0.jpg"
                 },
                 new BoardGame {Name = "Azul",
                     Categories = new List<Category>{categories[3]},
                     Description="Francuska Gra Roku 2018",
                     MinPlayers=2,
                     MaxPlayers=4,
-                    Website="https://www.rebel.pl/product.php/1,606/107324/Azul-edycja-polska.html"
+                    Website="https://www.rebel.pl/product.php/1,606/107324/Azul-edycja-polska.html",
+                    ImageUrl="https://www.rebel.pl/repository/thumbnails/a/z/azul-pudelko-3d.615464.800x0.jpg"
                 },
                 new BoardGame {Name = "Terraformacja Marsa",
                     Categories = new List<Category>{categories[0]},
                     Description="Zmień Marsa w planetę zdatną do życia!",
                     MinPlayers=2,
                     MaxPlayers=6,
-                    Website="https://www.rebel.pl/product.php/1,302/27758/Neuroshima-HEX-edycja-3.0.html"
+                    Website="https://www.rebel.pl/product.php/1,302/27758/Neuroshima-HEX-edycja-3.0.html",
+                    ImageUrl="https://www.rebel.pl/repository/thumbnails/b/o/box_3d_TerraformacjaMarsa_podstawka.3011438.800x0.jpg"
                 },
                 new BoardGame {Name = "7 Cudów Świata",
                     Categories = new List<Category>{categories[1]},
                     Description="Pokaż, jakie cuda może zbudować Twoja cywilizacja!",
                     MinPlayers=2,
                     MaxPlayers=7,
-                    Website="https://www.rebel.pl/product.php/1,302/19537/7-Cudow-Swiata.html"
+                    Website="https://www.rebel.pl/product.php/1,302/19537/7-Cudow-Swiata.html",
+                    ImageUrl="https://www.rebel.pl/repository/thumbnails/7/_/7_cudow_swiata_cover.324035.800x0.jpg"
                 },
                 new BoardGame {Name = "Colt Express",
                     Categories = new List<Category>{categories[1]},
                     Description="Zabawna i ekscytująca gra w napad na pociąg!",
                     MinPlayers=2,
                     MaxPlayers=6,
-                    Website="https://www.rebel.pl/product.php/1,302/27758/Neuroshima-HEX-edycja-3.0.html"
+                    Website="https://www.rebel.pl/product.php/1,302/27758/Neuroshima-HEX-edycja-3.0.html",
+                    ImageUrl="https://www.rebel.pl/repository/thumbnails/c/o/colt_3d.415327.800x0.jpg"
                 },
                 new BoardGame {Name = "7 Cudów Świata: Pojedynek",
                     Categories = new List<Category>{categories[0]},
                     Description="Świetna, dwuosobowa wersja kultowej gry",
                     MinPlayers=2,
                     MaxPlayers=2,
-                    Website="https://www.rebel.pl/product.php/1,302/27758/Neuroshima-HEX-edycja-3.0.html"
+                    Website="https://www.rebel.pl/product.php/1,302/27758/Neuroshima-HEX-edycja-3.0.html",
+                    ImageUrl="https://www.rebel.pl/repository/thumbnails/p/o/pojedynek_3d.365162.800x0.jpg"
                 },
                 new BoardGame {Name = "Resistance",
                     Categories = new List<Category>{categories[2]},
                     Description="Czy zdołasz domyślić się, kto z zebranych jest Agentem?",
                     MinPlayers=5,
                     MaxPlayers=10,
-                    Website="https://www.rebel.pl/product.php/1,1203/97141/The-Resistance-edycja-polska.html"}
+                    Website="https://www.rebel.pl/product.php/1,1203/97141/The-Resistance-edycja-polska.html",
+                    ImageUrl="https://www.rebel.pl/repository/thumbnails/3/d/3d-resistance.570087.800x0.png"}
             };
             boardGames.ForEach(bg => context.BoardGames.Add(bg));
             context.SaveChanges();
@@ -102,8 +112,8 @@ namespace BoardGames.DAL
             var players = new List<Player>
             {
                 new Player {Email = "zablo432432@o2.pl", 
-                    FirstName = "Hubert", 
-                    LastName = "Zabłocki",
+                    FirstName = "Bogdan", 
+                    LastName = "Bojko",
                     FavouriteGames = new List<BoardGame> { boardGames[1], boardGames[2] }},
                 new Player {Email = "Borys@o2.pl",
                     FirstName = "Borys",
@@ -145,6 +155,7 @@ namespace BoardGames.DAL
                 new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
             roleManager.Create(new IdentityRole("Player"));
+            roleManager.Create(new IdentityRole("Admin"));
 
             var users = players.Select(p => new ApplicationUser { UserName = p.Email }).ToList();
 
@@ -153,6 +164,18 @@ namespace BoardGames.DAL
                 userManager.AddToRole(u.Id,"Player");    
             });
 
+            Player adminPlayer = new Player
+            {
+                Email = "hzablocki97@gmail.com",
+                FirstName = "Hubert",
+                LastName = "Zabłocki"
+            };
+            context.Players.Add(adminPlayer);
+
+            var admin = new ApplicationUser { UserName = adminPlayer.Email };
+            userManager.Create(admin, "Admin@123");
+            userManager.AddToRole(admin.Id, "Admin");
+            userManager.AddToRole(admin.Id, "Player");
             DbSet<BoardGame> boardGames1 = context.BoardGames;
         }
     }

@@ -60,7 +60,7 @@ namespace BoardGames.Controllers
                     break;
             }
 
-            int pageSize = 5;
+            int pageSize = 20;
             int pageNumber = (page ?? 1);
             return View(boardGames.ToPagedList(pageNumber, pageSize));
         }
@@ -97,6 +97,20 @@ namespace BoardGames.Controllers
         {
             if (ModelState.IsValid)
             {
+                Player player = db.Players.Single(p => p.Email == User.Identity.Name);
+                boardGame.CreatedByPlayer = player;
+                //check if link is image, if not use placeholder
+                try
+                {
+                    WebClient client = new WebClient();
+                    client.DownloadData(boardGame.ImageUrl);
+
+                }
+                catch
+                {
+                    boardGame.ImageUrl = "/Obrazki/boardgame-placeholder.jpg";
+                }
+
                 db.BoardGames.Add(boardGame);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -164,6 +178,15 @@ namespace BoardGames.Controllers
             db.BoardGames.Remove(boardGame);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+        [Authorize]
+        public ActionResult AddToFavourites(int id)
+        {
+            BoardGame boardGame = db.BoardGames.Find(id);
+            Player player = db.Players.Single(p => p.Email == User.Identity.Name);
+            player.FavouriteGames.Add(boardGame);
+            db.SaveChanges();
+            return RedirectToAction("Details/" + id);
         }
 
         protected override void Dispose(bool disposing)

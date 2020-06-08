@@ -23,7 +23,12 @@ namespace BoardGames.Models
         public string Description { get; set; }
         [Display(Name = "Strona")]
         public string Website { get; set; }
+        [Display(Name = "Grafika")]
+        public string ImageUrl { get; set; }
 
+
+        [Display(Name = "Dodane przez gracza")]
+        public virtual Player CreatedByPlayer { get; set; }
         public virtual List<Category> Categories { get; set; }
 
         public virtual List<Player> Players { get; set; }

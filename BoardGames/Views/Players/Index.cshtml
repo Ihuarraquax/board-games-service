@@ -4,42 +4,28 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Społeczność</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
-}
-
-</table>
+<div class="row row-cols-1 row-cols-md-4">
+    @foreach (var item in Model)
+    {
+        <div class="card mb-1 p-2" style="max-width: 540px;">
+            <div class="row no-gutters">
+                <div class="col-md-5">
+                    @{ var image = item.Avatar != null ? item.Avatar : "img_avatar.png";}
+                    <img class="card-img-top" src="~/Obrazki/@image" style="border-radius: 50%;object-fit: cover;  width:100px; height:100px;" alt="Card image">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <p class="card-text">Ulubione gry: @item.FavouriteGames.Aggregate("", (prev, cur) => prev += " " + cur.Name)</p>
+                </div>
+            </div>
+            <a href="Players/Details/@item.ID" class="stretched-link"></a>
+        </div>
+    }
+</div>

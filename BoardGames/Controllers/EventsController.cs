@@ -47,6 +47,13 @@ namespace BoardGames.Controllers
         public ActionResult Create()
         {
             ViewBag.HostPlayerID = new SelectList(db.Players, "ID", "Email");
+            var boardGamesOptions = db.BoardGames.Select(bg => new SelectListItem
+            {
+                Value = bg.ID.ToString(),
+                Text = bg.Name,
+                Selected = false
+            }).ToList();
+            ViewBag.BoardGamesList = new MultiSelectList(boardGamesOptions, "Value", "Text");
             return View();
         }
 
@@ -56,10 +63,12 @@ namespace BoardGames.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Description,HostPlayerID,Place,Date")] Event @event)
+        public ActionResult Create([Bind(Include = "ID,Name,Description,Place,Date")] Event @event, int[] BoardGames)
         {
             if (ModelState.IsValid)
             {
+                @event.HostPlayer = db.Players.Single(p => p.Email == User.Identity.Name);
+                @event.BoardGames = db.BoardGames.Where(bg => BoardGames.Contains(bg.ID)).ToList();
                 db.Events.Add(@event);
                 db.SaveChanges();
                 return RedirectToAction("Index");

@@ -30,6 +30,10 @@ namespace BoardGames.DAL
             modelBuilder.Entity<Event>().HasMany<Player>(e => e.ParticipantPlayers)
                 .WithMany(p => p.ParticipatedEvents);
 
+            modelBuilder.Entity<BoardGame>().HasOptional<Player>(b => b.CreatedByPlayer);
+
+            modelBuilder.Entity<BoardGame>().HasMany<Player>(b => b.Players).WithMany(p => p.FavouriteGames);
+
         }
     }
 }

@@ -14,9 +14,9 @@
 {
     <div class="card rounded-lg border border-info">
         <div class="card-body">
-            <h5 class="card-title">
+            <h2 class="card-title">
                 @item.Name
-            </h5>
+            </h2>
             <h6 class="card-subtitle mb-2 text-muted">
                 @item.Place
                 @item.Date
@@ -29,14 +29,17 @@
                 if (item.ParticipantPlayers.Contains(ViewBag.Player))
                 {
                     <a href="events/cancel/@item.ID" class="card-link">Zrezygnuj</a>
-                } else { 
-                <a href="events/join/@item.ID" class="card-link">Dołącz</a>
+                } else 
+                if (item.HostPlayer == ViewBag.Player)
+                {
+                    <a href="events/delete/@item.ID" class="card-link">Usuń wydarzenie</a>
+                }
+                else
+                {
+                    <a href="events/join/@item.ID" class="card-link">Dołącz</a>
                 }
             }
             <a href="events/details/@item.ID" class="card-link">Szczegóły</a>
         </div>
     </div>
 }
-
-
-
