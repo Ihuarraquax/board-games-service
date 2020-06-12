@@ -1,0 +1,90 @@
+﻿@model IEnumerable<BoardGames.Models.Team>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+    <div class="container">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-4">
+                    <div class="card card-cascade wider">
+                        <div class="view view-cascade overlay">
+                            <img class="card-img-top" src="@item.ImageUrl" alt="Card image cap">
+                            <a href="/Teams/Details/@item.ID">
+                                <div class="mask rgba-white-slight"></div>
+                            </a>
+                        </div>
+
+                        <!-- Card content -->
+                        <div class="card-body card-body-cascade text-center">
+
+                            <!-- Title -->
+                            <h2 class="card-title"><strong>@item.Name</strong></h2>
+                            <!-- Subtitle -->
+                            <h6 class="blue-text pb-2"><strong>Prowadzący: @item.Owner.Name</strong></h6>
+                            <!-- Text -->
+                            <p class=" blockquote card-text">
+                                @item.Descripton
+                            </p>
+                        </div>
+                        <div class="row justify-content-around mr-2 ml-2">
+                            <div class="col-5 m-1 mr-3 pl-0">
+                                @{var image = item.Owner.Avatar != null ? item.Owner.Avatar : "img_avatar.png";}
+                                <a href="/Players/Details/@item.Owner.ID">
+                                    <span class="badge badge-pill badge-danger pr-3">
+                                        <img src="~/Obrazki/@image" class="mr-1 small-player-image text-break"> @item.Owner.Name
+                                    </span>
+                                </a>
+                            </div>
+                            @foreach (var player in item.Players)
+                            {
+                                <div class="col-5 m-1 mr-3 pl-0">
+                                    @{image = player.Avatar != null ? player.Avatar : "img_avatar.png";}
+                                    <a href="/Players/Details/@player.ID">
+                                        <div class="badge badge-pill badge-dark pr-2 text-break">
+                                            <img src="~/Obrazki/@image" class="mr-1 small-player-image"> <span>@player.Name</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                        }
+                        </div>
+                        <div class="row justify-content-md-center m-4">
+                            @{
+                                if (Request.IsAuthenticated)
+                                {
+                                    if (item.Owner.Email == User.Identity.Name)
+                                    {
+                                        <a href="Teams/Edit/@item.ID" class="btn btn-info ">Zarządzaj grupą</a>
+                                    }
+                                    else
+                                    {
+                                        if (item.Invited.Any(p => p.Email == User.Identity.Name))
+                                        {
+                                            <h3>Otrzymałeś zaproszenie do tej grupy</h3>
+                                            <a href="Teams/Accept/@item.ID" class="btn btn-success btn-rounded">Zaakceptuj</a>
+                                            <a href="Teams/Decline/@item.ID" class="btn btn-outline-danger btn-rounded">Odrzuć</a>
+                                        }
+
+                                        else if (item.JoinRequests.Any(p => p.Email == User.Identity.Name))
+                                        {
+                                            <a href="Teams/CancelJoinRequest/@item.ID" class="btn btn-warning btn-rounded">Anuluj prośbe</a>
+                                        }
+                                        else if (!item.Players.Any(p => p.Email == User.Identity.Name))
+                                        {
+                                            <a href="Teams/JoinRequest/@item.ID" class="btn btn-secondary btn-rounded">Poproś o przyjęcie</a>
+                                        }
+                                        else
+                                        {
+                                            <a href = "Teams/Quit/@item.ID" class="btn btn-danger btn-rounded">Opuść grupę</a>
+                                        }
+                                    }
+                                }
+                            }
+                        </div>
+                        </div>
+                    </div>
+            }
+        </div>
+    </div>

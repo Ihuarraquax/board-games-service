@@ -84,6 +84,13 @@ namespace BoardGames.Controllers
         [Authorize]
         public ActionResult Create()
         {
+            var categoriesOptions = db.Categories.Select(c => new SelectListItem
+            {
+                Value = c.ID.ToString(),
+                Text = c.Name,
+                Selected = false
+            }).ToList();
+            ViewBag.CategoriesList = new MultiSelectList(categoriesOptions, "Value", "Text");
             return View();
         }
 
@@ -93,7 +100,7 @@ namespace BoardGames.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Create([Bind(Include = "ID,Name,MinPlayers,MaxPlayers,Description,Website")] BoardGame boardGame)
+        public ActionResult Create([Bind(Include = "ID,Name,MinPlayers,MaxPlayers,Description,Website")] BoardGame boardGame, int[] Categories)
         {
             if (ModelState.IsValid)
             {
@@ -110,6 +117,8 @@ namespace BoardGames.Controllers
                 {
                     boardGame.ImageUrl = "/Obrazki/boardgame-placeholder.jpg";
                 }
+
+                boardGame.Categories = db.Categories.Where(c => Categories.Contains(c.ID)).ToList();
 
                 db.BoardGames.Add(boardGame);
                 db.SaveChanges();
@@ -186,7 +195,16 @@ namespace BoardGames.Controllers
             Player player = db.Players.Single(p => p.Email == User.Identity.Name);
             player.FavouriteGames.Add(boardGame);
             db.SaveChanges();
-            return RedirectToAction("Details/" + id);
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+        [Authorize]
+        public ActionResult RemoveFromFavourites(int id)
+        {
+            BoardGame boardGame = db.BoardGames.Find(id);
+            Player player = db.Players.Single(p => p.Email == User.Identity.Name);
+            player.FavouriteGames.Remove(boardGame);
+            db.SaveChanges();
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         protected override void Dispose(bool disposing)

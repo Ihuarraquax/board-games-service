@@ -109,11 +109,25 @@ namespace BoardGames.DAL
             boardGames.ForEach(bg => context.BoardGames.Add(bg));
             context.SaveChanges();
 
+            Player adminPlayer = new Player
+            {
+                Email = "hzablocki97@gmail.com",
+                FirstName = "Hubert",
+                LastName = "Zabłocki"
+            };
+            Player userPlayer = new Player
+            {
+                Email = "zablo432432@o2.pl",
+                FirstName = "HubiUser",
+                LastName = "ZabiUser"
+            };
+            context.Players.Add(adminPlayer);
+            context.Players.Add(userPlayer);
             var players = new List<Player>
             {
-                new Player {Email = "zablo432432@o2.pl", 
-                    FirstName = "Bogdan", 
-                    LastName = "Bojko",
+                new Player {Email = "zablo432432@gmail.pl", 
+                    FirstName = "Józef", 
+                    LastName = "Bytner",
                     FavouriteGames = new List<BoardGame> { boardGames[1], boardGames[2] }},
                 new Player {Email = "Borys@o2.pl",
                     FirstName = "Borys",
@@ -124,25 +138,65 @@ namespace BoardGames.DAL
                     LastName = "Kowalski",
                     FavouriteGames = new List<BoardGame>{ boardGames[1], boardGames[3] }}
             };
-
             players.ForEach(p => context.Players.Add(p));
             context.SaveChanges();
 
+            var teams = new List<Team>
+            {
+                new Team
+                {
+                    Name="Molochy",
+                    Descripton="Grupa znajomych ze studiów, gramy sobie w tygodniu w molocha na naszym uniwersytecie",
+                    Players = new HashSet<Player> { players[0], players[1]},
+                    ImageUrl = "https://i1.wp.com/www.boardgameresource.com/wp-content/uploads/2016/05/gaston.png",
+                    Owner = adminPlayer,
+                    JoinRequests = new HashSet<Player>(){ userPlayer}
+                },
+                new Team
+                {
+                    Name="Posterunki",
+                    Descripton="Gramy sobie w różne gry, od Euro po Strategiczne. Zbieramy się w soboty w sali 27 na UPH",
+                    Players = new HashSet<Player> { players[2], adminPlayer},
+                    ImageUrl = "https://s.hdnux.com/photos/54/41/33/11671278/5/920x920.jpg",
+                    Owner = players[0]
+                },
+                new Team
+                {
+                    Name="Plebskie granie",
+                    Descripton="Tylko casual gierki nic trudnego, max 10 min na gre",
+                    Players = new HashSet<Player> { players[1] },
+                    ImageUrl = "https://pyxis.nymag.com/v1/imgs/2c7/0cc/7e0a0ec0b953d33edbc370f56494231f4d-07-four-player-board-game-lede.rsquare.w700.jpg",
+                    Owner = players[0]
+                }
+            };
+            
+
+            teams.ForEach(t => context.Teams.Add(t));
+            context.SaveChanges();
 
             var events = new List<Event> {
                 new Event {Name = "Turniej molocha",
                     BoardGames = new List<BoardGame>{ boardGames[3] },
-                    HostPlayerID = players[0].ID,
+                    Description = "Międzygalaktyczny turniej molocha, będą mistrzowie nie tylko z całego świata ale również z Polski!",
+                    HostPlayerID = adminPlayer.ID,
                     Place="131 UPH",
-                    Date= new DateTime(2020,5,25,18,0,0),
+                    Date= DateTime.Now.AddDays(7),
                     ParticipantPlayers = new List<Player> {players[0],players[2] },
                 },
                 new Event {Name = "Luźne granie",
-                    BoardGames = new List<BoardGame>{ boardGames[1],boardGames[2] },
+                    BoardGames = boardGames.Select(bg => bg).ToList(),
                     HostPlayerID = players[2].ID,
+                    Description = "Mamy wszystkie gry jakie są i jest super, każdy znajdzie coś dla siebie",
                     Place="Białki",
-                    Date= new DateTime(2020,5,26,19,0,0),
-                    ParticipantPlayers = new List<Player> {players[1],players[0] }}
+                    Date= DateTime.Now.AddDays(-7),
+                    ParticipantPlayers = new List<Player> {players[1],players[0] }},
+                new Event {Name = "Wielkie granie",
+                    BoardGames = boardGames.Select(bg => bg).ToList(),
+                    HostPlayerID = players[1].ID,
+                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pulvinar, purus in sodales consequat, urna quam maximus quam, at condimentum metus erat ornare dolor. Maecenas a quam dictum, laoreet felis vitae, tempor risus. Nullam ex nisi, tincidunt non augue vitae, dapibus eleifend augue. Fusce venenatis odio in leo egestas maximus. Nullam consequat ante quis interdum ultricies. Nullam sed odio urna. Nunc ornare urna eget ante vulputate condimentum. Etiam dignissim fermentum elit a blandit. Phasellus id augue lorem. Mauris maximus metus sed aliquet dignissim. Maecenas vehicula ante at tincidunt malesuada. Pellentesque et hendrerit neque. Donec libero turpis, dictum eu finibus vitae, euismod sed quam. Fusce consequat erat non pellentesque lobortis. Vestibulum eget justo mollis, sagittis neque nec, suscipit urna.",
+                    Place="UPH",
+                    Date= DateTime.Now.AddDays(3),
+                    ParticipantPlayers = players.Select(p=>p).ToList()}
             };
 
             events.ForEach(e => context.Events.Add(e));
@@ -164,19 +218,17 @@ namespace BoardGames.DAL
                 userManager.AddToRole(u.Id,"Player");    
             });
 
-            Player adminPlayer = new Player
-            {
-                Email = "hzablocki97@gmail.com",
-                FirstName = "Hubert",
-                LastName = "Zabłocki"
-            };
-            context.Players.Add(adminPlayer);
-
             var admin = new ApplicationUser { UserName = adminPlayer.Email };
+            var user = new ApplicationUser { UserName = userPlayer.Email };
+
             userManager.Create(admin, "Admin@123");
             userManager.AddToRole(admin.Id, "Admin");
             userManager.AddToRole(admin.Id, "Player");
-            DbSet<BoardGame> boardGames1 = context.BoardGames;
+
+            userManager.Create(user, "User@123");
+            userManager.AddToRole(user.Id, "Player");
+            
+
         }
     }
 }

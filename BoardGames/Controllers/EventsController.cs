@@ -24,7 +24,7 @@ namespace BoardGames.Controllers
             //var events = db.Events.Include("HostPlayer");
             Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
             ViewBag.Player = player;
-            return View(events.ToList());
+            return View(events.OrderByDescending(e => e.Date).ToList());
         }
 
         // GET: Events/Details/5
@@ -135,6 +135,9 @@ namespace BoardGames.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Event @event = db.Events.Find(id);
+            @event.ParticipantPlayers = null;
+            @event.HostPlayer = null;
+            @event.BoardGames = null;
             db.Events.Remove(@event);
             db.SaveChanges();
             return RedirectToAction("Index");

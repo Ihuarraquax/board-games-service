@@ -29,6 +29,11 @@ namespace BoardGames.Models
         public virtual List<Event> HostedEvents { get; set; }
         [Display(Name = "Uczestnik wydarzeń")]
         public virtual List<Event> ParticipatedEvents { get; set; }
+        [Display(Name = "Drużyny")]
+        public virtual List<Team>  Teams { get; set; }
+        public virtual List<Team> TeamRequests { get; set; }
+        public virtual List<Team> TeamInvites { get; set; }
+
 
         public String NameAndEmail { get { return ToString(); } }
         public String Name { get { return FirstName+" "+ LastName; } }

@@ -9,37 +9,99 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+<div class="container">
+    @foreach (var item in Model)
+    {
+        var opacity = item.Date.CompareTo(DateTime.Now) < 0 ? "opacity: 0.5;" : ";";
+    <div class="row justify-content-md-center" style="@opacity ">
+        <div class="col-8 m-3 ">
+            <div class="card shadow-lg p-2 bg-white rounded">
+                <div class="card-body row justify-content-md-center pr-4">
+                    <div class="col-12 ">
+                        <a href="events/details/@item.ID">
+                            <h1 class="card-title text-center mb-3">
+                                @item.Name
+                            </h1>
+                        </a>
+                    </div>
+                    <div class="col-12 ">
+                        <h6 class="card-subtitle mb-2 text-muted text-right">
+                            @item.Place
+                            @item.Date
+                        </h6>
+                    </div>
+                    <div class="col-12 mb-5 blockquote">
+                        <p>@item.Description</p>
 
-@foreach (var item in Model)
-{
-    <div class="card rounded-lg border border-info">
-        <div class="card-body">
-            <h2 class="card-title">
-                @item.Name
-            </h2>
-            <h6 class="card-subtitle mb-2 text-muted">
-                @item.Place
-                @item.Date
-            </h6>
-            <p class="card-text">
-                @item.Description
-            </p>
-            @if (Request.IsAuthenticated)
-            {
-                if (item.ParticipantPlayers.Contains(ViewBag.Player))
-                {
-                    <a href="events/cancel/@item.ID" class="card-link">Zrezygnuj</a>
-                } else 
-                if (item.HostPlayer == ViewBag.Player)
-                {
-                    <a href="events/delete/@item.ID" class="card-link">Usuń wydarzenie</a>
-                }
-                else
-                {
-                    <a href="events/join/@item.ID" class="card-link">Dołącz</a>
-                }
-            }
-            <a href="events/details/@item.ID" class="card-link">Szczegóły</a>
+
+
+                    </div>
+                    <div class="container col-6">
+                        <h5 class="card-title">Gry:</h5>
+                        <div class="row justify-content-md-center">
+
+                            @foreach (var bg in item.BoardGames)
+                            {
+                                <div class="p-1">
+                                    <a href="/BoardGames/Details/@bg.ID" class="badge badge-primary">
+                                        <span>
+                                            <img class="small-boardgame-image p-1" src="@bg.ImageUrl" />
+                                            <br />
+                                            @bg.Name
+                                        </span>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h5 class="card-title">Gracze:</h5>
+                        <div class="container justify-content-center">
+                            <div class="row">
+                                <div class="col-6 m-1">
+                                    @{var image = item.HostPlayer.Avatar != null ? item.HostPlayer.Avatar : "img_avatar.png";}
+                                    <a href="/Players/Details/@item.HostPlayer.ID">
+                                        <span class="badge badge-pill badge-danger pr-3">
+                                            <img src="~/Obrazki/@image" class="mr-1 small-player-image text-break"> @item.HostPlayer.Name
+                                        </span>
+                                    </a>
+                                </div>
+                                @foreach (var player in item.ParticipantPlayers)
+                                {
+                                    <div class="col-6 m-1">
+                                        @{image = player.Avatar != null ? player.Avatar : "img_avatar.png";}
+                                        <a href="/Players/Details/@player.ID">
+                                            <span class="badge badge-pill badge-dark pr-3 text-break">
+                                                <img src="~/Obrazki/@image" class="mr-1 small-player-image"> @player.Name
+                                            </span>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5">
+                        @if (Request.IsAuthenticated)
+                        {
+                            if (item.ParticipantPlayers.Contains(ViewBag.Player))
+                            {
+                                <a href="events/cancel/@item.ID" class="btn btn-warning">Zrezygnuj</a>
+                            }
+                            else
+                            if (item.HostPlayer == ViewBag.Player)
+                            {
+                                <a href="events/delete/@item.ID" class="btn btn-danger">Usuń wydarzenie</a>
+                            }
+                            else
+                            {
+
+                                <a href="events/join/@item.ID" class="btn btn-success">Dołącz</a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-}
+    }
+    </div>

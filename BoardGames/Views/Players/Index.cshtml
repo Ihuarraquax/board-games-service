@@ -6,26 +6,45 @@
 
 <h2>Społeczność</h2>
 
-<div class="row row-cols-1 row-cols-md-4">
-    @foreach (var item in Model)
-    {
-        <div class="card mb-1 p-2" style="max-width: 540px;">
-            <div class="row no-gutters">
-                <div class="col-md-5">
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-3 twPc-div">
+                <a class="twPc-bg twPc-block" style="background-image: url('https://source.unsplash.com/featured/?boardgame')"></a>
+
+                <div>
+                    <div style="width: 9px;">
+                    </div>
                     @{ var image = item.Avatar != null ? item.Avatar : "img_avatar.png";}
-                    <img class="card-img-top" src="~/Obrazki/@image" style="border-radius: 50%;object-fit: cover;  width:100px; height:100px;" alt="Card image">
-                </div>
-                <div class="col-md-7">
-                    <div class="card-body">
-                        <h5 class="card-title">@item.Name</h5>
-                        
+                    <a title="@item.Name" href="Players/Details/@item.ID" class="twPc-avatarLink">
+                        <img alt="Mert S. Kaplan" src="~/Obrazki/@image" class="twPc-avatarImg">
+                    </a>
+
+                    <div class="twPc-divUser ">
+                        <div class="twPc-divName">
+                            <a href="Players/Details/@item.ID">@item.Name</a>
+                        </div>
+                    </div>
+
+                    <div class="twPc-divStats ">
+                        <ul class="twPc-Arrange ">
+                            <li class="twPc-ArrangeSizeFit ">
+                                <span class="twPc-StatLabel twPc-block text-center">Gry</span>
+                                <span class="twPc-StatValue text-center">@item.FavouriteGames.Count</span>
+                            </li>
+                            <li class="twPc-ArrangeSizeFit">
+                                <span class="twPc-StatLabel twPc-block text-center">Wydarzenia</span>
+                                <span class="twPc-StatValue text-center">@item.ParticipatedEvents.Count</span>
+                            </li>
+                            <li class="twPc-ArrangeSizeFit">
+                                <span class="twPc-StatLabel twPc-block text-center">Drużyny</span>
+                                <span class="twPc-StatValue text-center">@item.Teams.Count</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <p class="card-text">Ulubione gry: @item.FavouriteGames.Aggregate("", (prev, cur) => prev += " " + cur.Name)</p>
-                </div>
             </div>
-            <a href="Players/Details/@item.ID" class="stretched-link"></a>
-        </div>
-    }
+        }
+    </div>
 </div>

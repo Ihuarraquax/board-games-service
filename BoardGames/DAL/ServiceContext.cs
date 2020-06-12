@@ -34,6 +34,16 @@ namespace BoardGames.DAL
 
             modelBuilder.Entity<BoardGame>().HasMany<Player>(b => b.Players).WithMany(p => p.FavouriteGames);
 
+            modelBuilder.Entity<Team>().HasRequired<Player>(t => t.Owner).WithMany().WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Team>().HasMany<Player>(t => t.Players).WithMany(p => p.Teams);
+
+            modelBuilder.Entity<Team>().HasMany<Player>(t => t.Invited).WithMany(p=> p.TeamInvites);
+
+            modelBuilder.Entity<Team>().HasMany<Player>(t => t.JoinRequests).WithMany(p => p.TeamRequests);
+
         }
+
+        public System.Data.Entity.DbSet<BoardGames.Models.Team> Teams { get; set; }
     }
 }

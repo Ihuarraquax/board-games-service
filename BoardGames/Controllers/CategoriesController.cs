@@ -11,6 +11,7 @@ using BoardGames.Models;
 
 namespace BoardGames.Controllers
 {
+    
     public class CategoriesController : Controller
     {
         private ServiceContext db = new ServiceContext();
@@ -37,6 +38,7 @@ namespace BoardGames.Controllers
         }
 
         // GET: Categories/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
@@ -60,6 +62,7 @@ namespace BoardGames.Controllers
         }
 
         // GET: Categories/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -79,6 +82,7 @@ namespace BoardGames.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit([Bind(Include = "ID,Name")] Category category)
         {
             if (ModelState.IsValid)
@@ -91,6 +95,7 @@ namespace BoardGames.Controllers
         }
 
         // GET: Categories/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -106,6 +111,7 @@ namespace BoardGames.Controllers
         }
 
         // POST: Categories/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

@@ -14,8 +14,8 @@
 @using (Html.BeginForm("Index", "BoardGames", FormMethod.Get))
 {
     <p>
-        Szukaj: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
-        <input type="submit" value="Search" />
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new {@class="form-control" })
+        <input type="submit" value="Szukaj" class="btn btn-light" />
     </p>
 }
 
@@ -24,17 +24,31 @@
     @foreach (var item in Model)
     {
 
-        <div class="col mb-4">
-            <div class="card shadow-lg p-2 bg-white rounded">
+    <div class="col mb-4">
+        <div class="card shadow-lg p-2 bg-white rounded">
+            <a href="Boardgames/Details/@item.ID" class="">
                 <img src="@item.ImageUrl" onError="~/Obrazki/boardgame-placeholder.jpg" class="img-fluid" style="object-fit: contain;" alt="@item.Name">
                 <div class="card-body">
                     <h5 class="card-title">@item.Name</h5>
                     <h6 class="card-subtitle mb-2 text-muted text-right">@item.MinPlayers-@item.MaxPlayers graczy </h6>
                     <p class="card-text">@item.Description</p>
-                    <a href="Boardgames/Details/@item.ID" class="stretched-link"></a>
+
+
                 </div>
+            </a>
+            <div>
+                @if (item.Players.Where(p => p.Email == User.Identity.Name).Count() == 1)
+                {
+                    @Html.ActionLink("Odlub", "RemoveFromFavourites", new { id = item.ID }, new { @class = "btn btn-warning" })
+                }
+                else
+                {
+                    @Html.ActionLink("Ulub", "AddToFavourites", new { id = item.ID }, new { @class = "btn btn-success" })
+                }
             </div>
         </div>
+        
+    </div>
 
     }
 </div>

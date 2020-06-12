@@ -29,6 +29,8 @@ namespace BoardGames.Models
 
         [Display(Name = "Dodane przez gracza")]
         public virtual Player CreatedByPlayer { get; set; }
+        public virtual List<Event> Events { get; set; }
+        [Display(Name = "Kategorie")]
         public virtual List<Category> Categories { get; set; }
 
         public virtual List<Player> Players { get; set; }
