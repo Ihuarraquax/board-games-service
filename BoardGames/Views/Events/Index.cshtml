@@ -3,16 +3,14 @@
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Wydarzenia</h2>
-
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Nowe Wydarzenie", "Create", null, new { @class = "btn btn-success", style="position: relative;" })
 </p>
 <div class="container">
     @foreach (var item in Model)
     {
-        var opacity = item.Date.CompareTo(DateTime.Now) < 0 ? "opacity: 0.5;" : ";";
+        bool isLate = item.Date.CompareTo(DateTime.Now.AddHours(8)) < 0 ;
+        var opacity = isLate ? "opacity: 0.5;" : ";";
     <div class="row justify-content-md-center" style="@opacity ">
         <div class="col-8 m-3 ">
             <div class="card shadow-lg p-2 bg-white rounded">
@@ -81,7 +79,7 @@
                         </div>
                     </div>
                     <div class="mt-5">
-                        @if (Request.IsAuthenticated)
+                        @if (Request.IsAuthenticated && !isLate)
                         {
                             if (item.ParticipantPlayers.Contains(ViewBag.Player))
                             {

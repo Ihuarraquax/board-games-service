@@ -1,0 +1,125 @@
+﻿@model BoardGames.Models.Guild
+
+@{
+    ViewBag.Title = "Details";
+}
+    <div class="row">
+        <div class="col">
+            <div class="card m-2">
+
+                <div class="card card-cascade wider">
+                    <div class="view view-cascade overlay">
+                        <img class="card-img-top" src="@Model.ImageUrl" alt="Card image cap">
+                        <a href="/Guilds/Details/@Model.ID">
+                            <div class="mask rgba-white-slight"></div>
+                        </a>
+                    </div>
+
+                    <!-- Card content -->
+                    <div class="card-body card-body-cascade text-center">
+
+                        <!-- Title -->
+                        <h2 class="card-title"><strong>@Model.Name</strong></h2>
+                        <!-- Subtitle -->
+                        <h6 class="blue-text pb-2"><strong>Prowadzący: @Model.Owner.Name</strong></h6>
+                        <!-- Text -->
+                        <p class=" blockquote card-text">
+                            @Model.Descripton
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="col">
+            <div class="card m-2">
+                <div class="card-body">
+                    <h1>Członkowie:</h1>
+                    <table class="table table-striped table-responsive-md btn-table">
+                        <thead>
+                            <tr>
+                                <th>Gracz</th>
+                                <th>Akcje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @{var image = Model.Owner.Avatar != null ? Model.Owner.Avatar : "img_avatar.png";}
+                                    <a href="/Players/Details/@Model.Owner.ID">
+                                        <div>
+                                            <img src="~/Obrazki/@image" class="mr-1 small-player-image"> <span class="badge badge-danger" style="font: inherit">@Model.Owner.Name</span>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td>
+                                    todo
+                                </td>
+                            </tr>
+
+                            @foreach (var player in Model.Players)
+                            {
+                                <tr>
+                                    <td>
+                                        @{image = player.Avatar != null ? player.Avatar : "img_avatar.png";}
+                                        <a href="/Players/Details/@player.ID">
+                                            <div>
+                                                <img src="~/Obrazki/@image" class="mr-1 small-player-image"> <span>@player.Name</span>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        todo
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <form class="border border-light p-5" action="/Guilds/AddComment/@Model.ID">
+                    <textarea class="form-control rounded-0" name="content" rows="3" placeholder="Treść..." style="resize:vertical; min-width:100%"></textarea>
+
+                    <button class="btn btn-info btn-block" type="submit">Skomentuj</button>
+                </form>
+                <div class="container">
+                    @foreach (var message in Model.Chat.OrderByDescending(m => m.Date).ToList())
+                    {   
+                    <div class="card mt-3 p-2">
+                        <div class="flex-row row ">
+                            <div class="col-3">
+                                @{image = message.Author.Avatar != null ? message.Author.Avatar : "img_avatar.png";}
+                                <a href="/Players/Details/@message.Author.ID">
+                                    <div>
+                                        <img src="~/Obrazki/@image" class="mr-1 small-player-image" style="height:100px;width:100px">
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <div>
+                                    <h5>@message.Author.Name</h5>
+                                    <span class="text-muted">@message.Date.ToLocalTime()</span>
+                                    @message.Content
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col">
+
+    </div>
+</div>

@@ -1,4 +1,4 @@
-﻿@model BoardGames.Models.Team
+﻿@model BoardGames.Models.Guild
 
 @{
     ViewBag.Title = "Edit";
@@ -13,38 +13,45 @@
             {
                 @Html.AntiForgeryToken()
 
-                <div class="form-horizontal">
-                    <h4>Team</h4>
-                    <hr />
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    @Html.HiddenFor(model => model.ID)
+            <div class="form-horizontal">
+                <h4>Gildia</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.ID)
 
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Descripton, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Descripton, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Descripton, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Save" class="btn btn-default" />
-                        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label " })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                     </div>
                 </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Descripton, htmlAttributes: new { @class = "control-label " })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Descripton, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Descripton, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ImageUrl, htmlAttributes: new { @class = "control-label" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ImageUrl, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Edytuj" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
             }
         </div>
         <div class="col-5 card m-2 p-3">
-            <h1>Gracze</h1>
+            <h1>Członkowie:</h1>
             <table class="table table-striped table-responsive-md btn-table">
                 <thead>
                     <tr>
@@ -65,8 +72,8 @@
                                 </a>
                             </td>
                             <td>
-                                <a href="/Teams/RemovePlayer/@Model.ID?playerID=@player.ID" class="btn btn-danger btn-sm m-0">Usuń</a>
-                                <a href="/Teams/MakeOwner/@Model.ID?playerID=@player.ID" class="btn btn-deep-orange btn-sm m-0">Oddaj prowadzącego</a>
+                                <a href="/Guilds/RemovePlayer/@Model.ID?playerID=@player.ID" class="btn btn-danger btn-sm m-0">Usuń</a>
+                                <a href="/Guilds/MakeOwner/@Model.ID?playerID=@player.ID" class="btn btn-deep-orange btn-sm m-0">Oddaj prowadzącego</a>
                             </td>
                         </tr>
                     }
@@ -77,7 +84,7 @@
     </div>
     <div class="row">
         <div class="col-5 card m-2 p-3">
-            <h1>Zgłoszenia</h1>
+            <h1>Zgłoszenia:</h1>
             <table class="table table-striped table-responsive-md btn-table">
                 <thead>
                     <tr>
@@ -98,8 +105,8 @@
                                 </a>
                             </td>
                             <td>
-                                <a href="/Teams/AcceptJoinRequest/@Model.ID?playerID=@player.ID" class="btn btn-success btn-sm m-0">Akceptuj</a>
-                                <a href="/Teams/DeclineJoinRequest/@Model.ID?playerID=@player.ID" class="btn btn-danger btn-sm m-0">Odrzuć</a>
+                                <a href="/Guilds/AcceptJoinRequest/@Model.ID?playerID=@player.ID" class="btn btn-success btn-sm m-0">Akceptuj</a>
+                                <a href="/Guilds/DeclineJoinRequest/@Model.ID?playerID=@player.ID" class="btn btn-danger btn-sm m-0">Odrzuć</a>
                             </td>
                         </tr>
                     }
@@ -129,7 +136,7 @@
                                 </a>
                             </td>
                             <td>
-                                <a href="/Teams/CancelInvite/@Model.ID?playerID=@player.ID" class="btn btn-danger btn-sm m-0">Anuluj</a>
+                                <a href="/Guilds/CancelInvite/@Model.ID?playerID=@player.ID" class="btn btn-danger btn-sm m-0">Anuluj</a>
                             </td>
                         </tr>
                     }
@@ -139,9 +146,9 @@
 
 
 
-            @using (Html.BeginForm("InvitePlayer", "Teams", FormMethod.Get))
+            @using (Html.BeginForm("InvitePlayer", "Guilds", FormMethod.Get))
             {
-                <input name="teamId" type="hidden" value="@Model.ID">
+                <input name="guildId" type="hidden" value="@Model.ID">
 
                 @Html.DropDownList("PlayerToInvite", null, new { @class="browser-default custom-select" });
                 <p>
@@ -150,9 +157,6 @@
             }
         </div>
     </div>
-    </div>
-    <div>
-        @Html.ActionLink("Back to List", "Index")
     </div>
 
     @section Scripts {

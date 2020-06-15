@@ -11,64 +11,75 @@ using BoardGames.Models;
 
 namespace BoardGames.Controllers
 {
-    public class TeamsController : Controller
+    public class GuildsController : Controller
     {
         private ServiceContext db = new ServiceContext();
 
-        // GET: Teams
+        // GET: guilds
         public ActionResult Index()
         {
-            var teams = db.Teams.Include(t => t.Players).Include(t => t.JoinRequests).Include(t=> t.Invited);
-            return View(teams.ToList());
+            var guilds = db.Guilds.Include(t => t.Players).Include(t => t.JoinRequests).Include(t=> t.Invited);
+            return View(guilds.ToList());
         }
 
-        // GET: Teams/Details/5
+        // GET: guilds/Details/5
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Team team = db.Teams.Find(id);
-            if (team == null)
+            Guild guild = db.Guilds.Where(t => t.ID == id).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).Include(t=> t.Chat).SingleOrDefault();
+            if (guild == null)
             {
                 return HttpNotFound();
             }
-            return View(team);
+            Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
+
+            if(guild.Owner.ID==player.ID || guild.Players.Any(p => p.ID == player.ID))
+            {
+                return View(guild);
+
+            }
+            return RedirectToAction("Index");
         }
 
-        // GET: Teams/Create
+        // GET: guilds/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Teams/Create
+        // POST: guilds/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Descripton")] Team team)
+        public ActionResult Create([Bind(Include = "Name,Descripton,ImageUrl")] Guild guild)
         {
             if (ModelState.IsValid)
             {
-                db.Teams.Add(team);
+                Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
+                guild.OwnerId = player.ID;
+                guild.Owner = player;
+                db.Guilds.Add(guild);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(team);
+            return View(guild);
         }
 
-        // GET: Teams/Edit/5
+        // GET: guilds/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Team team = db.Teams.Where(t => t.ID == id).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
-            if (team == null)
+            Guild guild = db.Guilds.Where(t => t.ID == id).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
+            if (guild == null)
             {
                 return HttpNotFound();
             }
@@ -76,56 +87,56 @@ namespace BoardGames.Controllers
             List<SelectListItem> items = new List<SelectListItem>();
             
             List<SelectListItem> selectItems = db.Players.Select(p => p).ToList().Where(p => 
-            p.ID != team.Owner.ID 
-            && !team.Players.Any(pl => pl.ID == p.ID) 
-            && !team.Invited.Any(pl => pl.ID == p.ID)
-            && !team.JoinRequests.Any(pl => pl.ID == p.ID))
+            p.ID != guild.Owner.ID 
+            && !guild.Players.Any(pl => pl.ID == p.ID) 
+            && !guild.Invited.Any(pl => pl.ID == p.ID)
+            && !guild.JoinRequests.Any(pl => pl.ID == p.ID))
                 .Select(p => new SelectListItem { Text = p.Name, Value = p.ID.ToString() }).ToList();
 
             selectItems.ForEach(sli => items.Add(sli));
 
             ViewBag.PlayerToInvite = items;
-            return View(team);
+            return View(guild);
         }
 
-        // POST: Teams/Edit/5
+        // POST: guilds/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Descripton")] Team team)
+        public ActionResult Edit([Bind(Include = "Name,Descripton,ImageUrl")] Guild guild)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(team).State = EntityState.Modified;
+                db.Entry(guild).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(team);
+            return View(guild);
         }
 
-        // GET: Teams/Delete/5
+        // GET: guilds/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Team team = db.Teams.Find(id);
-            if (team == null)
+            Guild guild = db.Guilds.Find(id);
+            if (guild == null)
             {
                 return HttpNotFound();
             }
-            return View(team);
+            return View(guild);
         }
 
-        // POST: Teams/Delete/5
+        // POST: guilds/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Team team = db.Teams.Find(id);
-            db.Teams.Remove(team);
+            Guild guild = db.Guilds.Find(id);
+            db.Guilds.Remove(guild);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -138,14 +149,14 @@ namespace BoardGames.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Team team = db.Teams.Where(t => t.ID == id).Include(t => t.JoinRequests).SingleOrDefault();
-            if (team == null)
+            Guild guild = db.Guilds.Where(t => t.ID == id).Include(t => t.JoinRequests).SingleOrDefault();
+            if (guild == null)
             {
                 return HttpNotFound();
             }
             
             Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
-            team.JoinRequests.Add(player);
+            guild.JoinRequests.Add(player);
             db.SaveChanges();
 
             return RedirectToAction("Index");
@@ -157,26 +168,26 @@ namespace BoardGames.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Team team = db.Teams.Where(t => t.ID == id).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
-            if (team == null)
+            Guild guild = db.Guilds.Where(t => t.ID == id).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
+            if (guild == null)
             {
                 return HttpNotFound();
             }
 
             Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
-            team.JoinRequests.Remove(player);
+            guild.JoinRequests.Remove(player);
             db.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
-        public ActionResult InvitePlayer(int teamId, int PlayerToInvite)
+        public ActionResult InvitePlayer(int guildId, int PlayerToInvite)
         {
-            Team team = db.Teams.Where(t => t.ID == teamId).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
+            Guild guild = db.Guilds.Where(t => t.ID == guildId).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
 
             Player player = db.Players.Where(p => p.ID == PlayerToInvite).FirstOrDefault();
 
-            team.Invited.Add(player);
+            guild.Invited.Add(player);
 
             db.SaveChanges();
             return Redirect(Request.UrlReferrer.ToString());
@@ -184,11 +195,11 @@ namespace BoardGames.Controllers
 
         public ActionResult CancelInvite(int ID, int playerID)
         {
-            Team team = db.Teams.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
+            Guild guild = db.Guilds.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
 
             Player player = db.Players.Where(p => p.ID == playerID).FirstOrDefault();
 
-            team.Invited.Remove(player);
+            guild.Invited.Remove(player);
 
             db.SaveChanges();
             return Redirect(Request.UrlReferrer.ToString());
@@ -196,11 +207,11 @@ namespace BoardGames.Controllers
 
         public ActionResult RemovePlayer(int ID, int playerID)
         {
-            Team team = db.Teams.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
+            Guild guild = db.Guilds.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
 
             Player player = db.Players.Where(p => p.ID == playerID).FirstOrDefault();
 
-            team.Players.Remove(player);
+            guild.Players.Remove(player);
 
             db.SaveChanges();
             return Redirect(Request.UrlReferrer.ToString());
@@ -208,70 +219,81 @@ namespace BoardGames.Controllers
 
         public ActionResult MakeOwner(int ID, int playerID)
         {
-            Team team = db.Teams.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
+            Guild guild = db.Guilds.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
 
             Player player = db.Players.Where(p => p.ID == playerID).FirstOrDefault();
 
-            team.Players.Remove(player);
-            team.Players.Add(team.Owner);
-            team.Owner = player;
+            guild.Players.Remove(player);
+            guild.Players.Add(guild.Owner);
+            guild.Owner = player;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
         public ActionResult AcceptJoinRequest(int ID, int playerID)
         {
-            Team team = db.Teams.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
+            Guild guild = db.Guilds.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
 
             Player player = db.Players.Where(p => p.ID == playerID).FirstOrDefault();
 
-            team.JoinRequests.Remove(player);
-            team.Players.Add(player);
+            guild.JoinRequests.Remove(player);
+            guild.Players.Add(player);
             db.SaveChanges();
             return Redirect(Request.UrlReferrer.ToString());
         }
         public ActionResult DeclineJoinRequest(int ID, int playerID)
         {
-            Team team = db.Teams.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
+            Guild guild = db.Guilds.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
 
             Player player = db.Players.Where(p => p.ID == playerID).FirstOrDefault();
 
-            team.JoinRequests.Remove(player);
+            guild.JoinRequests.Remove(player);
             db.SaveChanges();
             return Redirect(Request.UrlReferrer.ToString());
         }
 
         public ActionResult Accept(int ID)
         {
-            Team team = db.Teams.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
+            Guild guild = db.Guilds.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
 
             Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
 
-            team.Invited.Remove(player);
-            team.Players.Add(player);
+            guild.Invited.Remove(player);
+            guild.Players.Add(player);
             db.SaveChanges();
             return Redirect(Request.UrlReferrer.ToString());
         }
         public ActionResult Decline(int ID)
         {
-            Team team = db.Teams.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
+            Guild guild = db.Guilds.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
 
             Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
 
-            team.Invited.Remove(player);
+            guild.Invited.Remove(player);
             db.SaveChanges();
             return Redirect(Request.UrlReferrer.ToString());
         }
         public ActionResult Quit(int? ID)
         {
-            Team team = db.Teams.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
+            Guild guild = db.Guilds.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).SingleOrDefault();
 
             Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
 
-            team.Players.Remove(player);
+            guild.Players.Remove(player);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
+        public ActionResult AddComment(int ID)
+        {
+            Guild guild = db.Guilds.Where(t => t.ID == ID).Include(t => t.Players).Include(t => t.JoinRequests).Include(t => t.Invited).Include(g=> g.Chat).SingleOrDefault();
+
+            Player player = db.Players.Where(p => p.Email == User.Identity.Name).FirstOrDefault();
+
+            ChatMessage chatMessage = new ChatMessage { Guild = guild, Author = player, Content = Request["content"], Date = DateTime.Now };
+            guild.Chat.Add(chatMessage);
+            db.SaveChanges();
+            return Redirect(Request.UrlReferrer.ToString());
+        }
 
 
         protected override void Dispose(bool disposing)

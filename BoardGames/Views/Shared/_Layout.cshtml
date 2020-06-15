@@ -11,21 +11,26 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav class="mb-1 navbar navbar-expand-lg lighten-1 fixed-top bg-light">
         @Html.ActionLink("PLanSZ00fki", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
+                aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li>@Html.ActionLink("Gry Planszowe", "Index", "BoardGames", new { area = "" }, new { @class = "nav-link" })</li>
-                <li>@Html.ActionLink("Gracze", "Index", "Players", new { area = "" }, new { @class = "nav-link" })</li>
-                <li>@Html.ActionLink("Wydarzenia", "Index", "Events", new { area = "" }, new { @class = "nav-link" })</li>
-                <li>@Html.ActionLink("Drużyny", "Index", "Teams", new { area = "" }, new { @class = "nav-link" })</li>
-                <li>@Html.ActionLink("Kategorie gier", "Index", "Categories", new { area = "" }, new { @class = "nav-link" })</li>
-                <li>@Html.ActionLink("Statystyki", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+        @{var pageController = ViewContext.RouteData.Values["Controller"].ToString(); }
+        @{var pageAction = ViewContext.RouteData.Values["Action"].ToString(); }
+        <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
+            <ul class="navbar-nav mr-auto">
+                <li>@Html.ActionLink("Gry Planszowe", "Index", "BoardGames", new { area = "" }, new { @class = "nav-link " + (pageController == "BoardGames" ? "bg-white rounded-pill" : "") })</li>
+                <li>@Html.ActionLink("Gracze", "Index", "Players", new { area = "" }, new { @class = "nav-link " + (pageController == "Players" ? "bg-white rounded-pill" : "") })</li>
+                <li>@Html.ActionLink("Wydarzenia", "Index", "Events", new { area = "" }, new { @class = "nav-link " + (pageController == "Events" ? "bg-white rounded-pill" : "") })</li>
+                <li>@Html.ActionLink("Gildie", "Index", "Guilds", new { area = "" }, new { @class = "nav-link " + (pageController == "Guilds" ? "bg-white rounded-pill" : "") })</li>
+                <li>@Html.ActionLink("Kategorie gier", "Index", "Categories", new { area = "" }, new { @class = "nav-link " + (pageController == "Categories" ? "bg-white rounded-pill" : "") })</li>
+                <li>@Html.ActionLink("Statystyki", "About", "Home", new { area = "" }, new { @class = "nav-link " + (pageAction == "About" ? "bg-white rounded-pill" : "") })</li>
             </ul>
-            @Html.Partial("_LoginPartial")
+            <ul class="navbar-nav ml-auto nav-flex-icons">
+                @Html.Partial("_LoginPartial")
+            </ul>
         </div>
     </nav>
 

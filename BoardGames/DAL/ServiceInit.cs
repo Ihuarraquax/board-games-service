@@ -141,9 +141,9 @@ namespace BoardGames.DAL
             players.ForEach(p => context.Players.Add(p));
             context.SaveChanges();
 
-            var teams = new List<Team>
+            var guilds = new List<Guild>
             {
-                new Team
+                new Guild
                 {
                     Name="Molochy",
                     Descripton="Grupa znajomych ze studiów, gramy sobie w tygodniu w molocha na naszym uniwersytecie",
@@ -152,7 +152,7 @@ namespace BoardGames.DAL
                     Owner = adminPlayer,
                     JoinRequests = new HashSet<Player>(){ userPlayer}
                 },
-                new Team
+                new Guild
                 {
                     Name="Posterunki",
                     Descripton="Gramy sobie w różne gry, od Euro po Strategiczne. Zbieramy się w soboty w sali 27 na UPH",
@@ -160,7 +160,7 @@ namespace BoardGames.DAL
                     ImageUrl = "https://s.hdnux.com/photos/54/41/33/11671278/5/920x920.jpg",
                     Owner = players[0]
                 },
-                new Team
+                new Guild
                 {
                     Name="Plebskie granie",
                     Descripton="Tylko casual gierki nic trudnego, max 10 min na gre",
@@ -169,11 +169,22 @@ namespace BoardGames.DAL
                     Owner = players[0]
                 }
             };
-            
-
-            teams.ForEach(t => context.Teams.Add(t));
+            guilds.ForEach(g => context.Guilds.Add(g));
             context.SaveChanges();
 
+            var chatMessages = new List<ChatMessage>
+            {
+                new ChatMessage
+                {
+                    Author = players[0], Content="elo elo testowy komentarz giedy gramy w lomocha", Guild = guilds[0], Date = DateTime.Now.AddMinutes(-30)
+                },
+                new ChatMessage
+                {
+                    Author = adminPlayer, Content="Nowy komentarz admina", Guild = guilds[0], Date = DateTime.Now.AddMinutes(-80)
+                },
+            };
+            chatMessages.ForEach(cm => context.ChatMessages.Add(cm));
+            context.SaveChanges();
             var events = new List<Event> {
                 new Event {Name = "Turniej molocha",
                     BoardGames = new List<BoardGame>{ boardGames[3] },

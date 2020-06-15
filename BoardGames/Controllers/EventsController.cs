@@ -40,6 +40,7 @@ namespace BoardGames.Controllers
                 return HttpNotFound();
             }
             ViewBag.ParticipantPlayers = new SelectList(db.Players, "ID", "NameAndEmail");
+            ViewBag.Guilds = new SelectList(db.Guilds, "ID", "Name");
             return View(@event);
         }
         [Authorize]
@@ -91,6 +92,7 @@ namespace BoardGames.Controllers
                 return HttpNotFound();
             }
             ViewBag.HostPlayerID = new SelectList(db.Players, "ID", "Email", @event.HostPlayerID);
+            ViewBag.HostPlayerID = new SelectList(db.Guilds, "ID", "Email", @event.HostPlayerID);
             return View(@event);
         }
 
@@ -159,9 +161,20 @@ namespace BoardGames.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
         [HttpPost]
-        public ActionResult SendInvite()
+        public ActionResult SendInvite(int? id)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Event @event = db.Events.Find(id);
+            if (@event == null)
+            {
+                return HttpNotFound();
+            }
+
             string playerId = Request["ParticipantPlayers"];
             string messageText = Request["message"];
             Player player = db.Players.Find(int.Parse(playerId));
@@ -182,6 +195,41 @@ namespace BoardGames.Controllers
             };
 
             smtpClient.Send(message);
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult SendInviteToGuild()
+        {
+            Event @event = db.Events.Find(int.Parse(Request["id"]));
+            if (@event == null)
+            {
+                return HttpNotFound();
+            }
+
+            int guildId = int.Parse(Request["Guilds"].ToString());
+            string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+            string messageText = $"{@event.HostPlayer.NameAndEmail} zaprasza cię na wydarzenie <b>{@event.Name}</b>!\n\n" +
+                $"{domainName}/Event/Details/{@event.ID}";
+
+            foreach (var p in db.Guilds.Where(g=> g.ID == guildId).SelectMany(g => g.Players).ToList())
+            {
+                var message = new System.Net.Mail.MailMessage(ConfigurationManager.AppSettings["sender"], p.Email)
+                {
+                    Subject = "Zaproszenie do Wydarzenia ",
+                    Body = messageText
+                };
+
+                var smtpClient = new System.Net.Mail.SmtpClient
+                {
+                    Host = ConfigurationManager.AppSettings["smtpHost"],
+                    Credentials = new System.Net.NetworkCredential(
+                        ConfigurationManager.AppSettings["sender"],
+                        ConfigurationManager.AppSettings["passwd"]),
+                    EnableSsl = true
+                };
+
+                smtpClient.Send(message);
+            }
             return RedirectToAction("Index");
         }
 

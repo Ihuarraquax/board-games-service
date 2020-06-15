@@ -19,6 +19,8 @@ namespace BoardGames.DAL
         public DbSet<Category> Categories { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<Guild> Guilds { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -34,16 +36,17 @@ namespace BoardGames.DAL
 
             modelBuilder.Entity<BoardGame>().HasMany<Player>(b => b.Players).WithMany(p => p.FavouriteGames);
 
-            modelBuilder.Entity<Team>().HasRequired<Player>(t => t.Owner).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<Guild>().HasRequired<Player>(t => t.Owner).WithMany().WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Team>().HasMany<Player>(t => t.Players).WithMany(p => p.Teams);
+            modelBuilder.Entity<Guild>().HasMany<Player>(t => t.Players).WithMany(p => p.Guilds);
 
-            modelBuilder.Entity<Team>().HasMany<Player>(t => t.Invited).WithMany(p=> p.TeamInvites);
+            modelBuilder.Entity<Guild>().HasMany<Player>(t => t.Invited).WithMany(p=> p.GuildInvites);
 
-            modelBuilder.Entity<Team>().HasMany<Player>(t => t.JoinRequests).WithMany(p => p.TeamRequests);
+            modelBuilder.Entity<Guild>().HasMany<Player>(t => t.JoinRequests).WithMany(p => p.GuildRequests);
+
+            modelBuilder.Entity<Guild>().HasMany<ChatMessage>(t => t.Chat);
 
         }
 
-        public System.Data.Entity.DbSet<BoardGames.Models.Team> Teams { get; set; }
     }
 }

@@ -30,9 +30,9 @@ namespace BoardGames.Models
         [Display(Name = "Uczestnik wydarzeń")]
         public virtual List<Event> ParticipatedEvents { get; set; }
         [Display(Name = "Drużyny")]
-        public virtual List<Team>  Teams { get; set; }
-        public virtual List<Team> TeamRequests { get; set; }
-        public virtual List<Team> TeamInvites { get; set; }
+        public virtual List<Guild>  Guilds { get; set; }
+        public virtual List<Guild> GuildRequests { get; set; }
+        public virtual List<Guild> GuildInvites { get; set; }
 
 
         public String NameAndEmail { get { return ToString(); } }

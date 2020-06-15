@@ -182,7 +182,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PlayersController.cs" />
-    <Compile Include="Controllers\TeamsController.cs" />
+    <Compile Include="Controllers\GuildsController.cs" />
     <Compile Include="DAL\ServiceContext.cs" />
     <Compile Include="DAL\ServiceInit.cs" />
     <Compile Include="Global.asax.cs">
@@ -191,13 +191,15 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BoardGame.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\ChatMessage.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Player.cs" />
-    <Compile Include="Models\Team.cs" />
+    <Compile Include="Models\Guild.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Util\Utilities.cs" />
     <Compile Include="ViewModels\BoardGamePlayersGroup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -383,11 +385,11 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Manage\SetAvatar.cshtml" />
-    <Content Include="Views\Teams\Create.cshtml" />
-    <Content Include="Views\Teams\Delete.cshtml" />
-    <Content Include="Views\Teams\Details.cshtml" />
-    <Content Include="Views\Teams\Edit.cshtml" />
-    <Content Include="Views\Teams\Index.cshtml" />
+    <Content Include="Views\Guilds\Create.cshtml" />
+    <Content Include="Views\Guilds\Delete.cshtml" />
+    <Content Include="Views\Guilds\Details.cshtml" />
+    <Content Include="Views\Guilds\Edit.cshtml" />
+    <Content Include="Views\Guilds\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
