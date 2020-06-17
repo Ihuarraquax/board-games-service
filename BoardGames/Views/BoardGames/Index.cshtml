@@ -26,15 +26,29 @@
         <div class="card shadow-lg p-2 bg-white rounded">
             <a href="Boardgames/Details/@item.ID" class="">
                 <img src="@item.ImageUrl" onError="~/Obrazki/boardgame-placeholder.jpg" class="img-fluid" style="object-fit: contain;" alt="@item.Name">
-                <div class="card-body">
-                    <h5 class="card-title">@item.Name</h5>
-                    <h6 class="card-subtitle mb-2 text-muted text-right">@item.MinPlayers-@item.MaxPlayers graczy </h6>
-                    <p class="card-text">@item.Description</p>
+
+                <h6 class="grey-text pb-2 pt-1 text-right mb-0">
+
+                    @item.MinPlayers - @item.MaxPlayers <i class="fas fa-user mr-4"></i>
+
+                    @foreach (var cat in item.Categories)
+                    {
+                        @(cat.Name + " ")
+
+                    }
+                    <i class="fas fa-dice mt-2 mr-3"></i>
+                </h6>
+                
+                <div class="card-body pl-1">
+                    <h3 class="card-title ml-3">@item.Name</h3>
+                    <p class=" blockquote card-text ">
+                        @item.Description
+                    </p>
 
 
                 </div>
             </a>
-            <div>
+            <div >
                 @if (item.Players.Where(p => p.Email == User.Identity.Name).Count() == 1)
                 {
                     @Html.ActionLink("Odlub", "RemoveFromFavourites", new { id = item.ID }, new { @class = "btn btn-warning" })
@@ -50,10 +64,3 @@
 
     }
 </div>
-
-
-<br />
-
-
-@Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

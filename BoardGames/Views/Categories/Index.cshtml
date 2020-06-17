@@ -3,12 +3,10 @@
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Index</h2>
 @if (Context.User.IsInRole("Admin"))
 {
     <p>
-        @Html.ActionLink("Create New", "Create")
+        @Html.ActionLink("Dodaj kategorie", "Create",null,new { @class = "btn btn-success"})
     </p>
 }
     <table class="table">

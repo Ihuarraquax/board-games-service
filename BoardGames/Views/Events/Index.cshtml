@@ -86,14 +86,15 @@
                                 <a href="events/cancel/@item.ID" class="btn btn-warning">Zrezygnuj</a>
                             }
                             else
-                            if (item.HostPlayer == ViewBag.Player)
+                            {
+                                if (item.HostPlayer.ID!=ViewBag.Player.ID) {
+                                <a href="events/join/@item.ID" class="btn btn-success">Dołącz</a>
+                                }
+                            }
+
+                            if (item.HostPlayer == ViewBag.Player || Context.User.IsInRole("Admin"))
                             {
                                 <a href="events/delete/@item.ID" class="btn btn-danger">Usuń wydarzenie</a>
-                            }
-                            else
-                            {
-
-                                <a href="events/join/@item.ID" class="btn btn-success">Dołącz</a>
                             }
                         }
                     </div>

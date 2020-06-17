@@ -100,7 +100,7 @@ namespace BoardGames.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Create([Bind(Include = "ID,Name,MinPlayers,MaxPlayers,Description,Website")] BoardGame boardGame, int[] Categories)
+        public ActionResult Create([Bind(Include = "ID,Name,MinPlayers,MaxPlayers,Description,Website,ImageUrl")] BoardGame boardGame, int[] Categories)
         {
             if (ModelState.IsValid)
             {
